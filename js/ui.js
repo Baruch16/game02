@@ -93,7 +93,10 @@ export class UI {
       case 'abort': this.app.endBattle(); this.go('missions'); break;
       case 'retry': this.launch(this.lastLaunch.kind, this.lastLaunch.id); break;
       case 'next': this.launch('campaign', P().campaign.unlocked); break;
-      case 'reset': if (confirm('Erase ALL progress and start over?')) { S.resetProfile(); this.toast('Progress reset'); this.go('main'); } break;
+      case 'reset':
+        if (this.resetArmed) { this.resetArmed = false; S.resetProfile(); this.toast('Progress reset'); this.go('main'); }
+        else { this.resetArmed = true; el.textContent = 'CLICK AGAIN TO ERASE'; setTimeout(() => { this.resetArmed = false; if (el.isConnected) el.textContent = 'RESET'; }, 3000); }
+        break;
       case 'cam': audio.click(); P().settings.camera = d.v; S.save(); this.render(); break;
       case 'quality': audio.click(); P().settings.quality = d.v; S.save(); this.render(); break;
     }
